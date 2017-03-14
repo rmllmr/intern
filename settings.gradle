@@ -1,2 +1,4 @@
 rootProject.name = 'intern'
 include 'lesson1'
+include 'lesson_MoreThreadsCach'
+
