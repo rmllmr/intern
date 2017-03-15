@@ -8,9 +8,6 @@ allprojects {
 
 }
 
-project ('lesson1') {
-
-}
 
 repositories {
     mavenCentral()

@@ -2,71 +2,55 @@ package mobi.morethreadscach;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by user on 14.03.2017.
  */
-public class MoreThreadsCache<T> implements Runnable{
+public class MoreThreadsCache<T> {
 
     private Map<String, T> cacheValue = new HashMap<String, T>();
     private Map<String, Long> cacheTimeLive = new HashMap<String, Long>();
     private Lock lock = new ReentrantLock();;
 
-    public T get(String keyCache){
-        checkRCache();
-        try {
-            lock.lock();
-                if (cacheTimeLive.containsKey(keyCache)){
-                    return cacheValue.get(keyCache);
-                }
+    public T get(String key){
 
-        } finally{
+            lock.lock();
+                checkCache();
+                if (cacheTimeLive.containsKey(key)){
+                    return cacheValue.get(key);
+                }
             lock.unlock();
-        }
 
         return null;
     };
 
 
-    public void put(String keyCache, T valueCashe, int timeLive){
-        checkRCache();
-        try {
-            lock.lock();
-                if (timeLive > 0) {
-                    long timeLiveToCache = timeLive * 1000 + System.currentTimeMillis();
-                    cacheValue.put(keyCache, valueCashe);
-                    cacheTimeLive.put(keyCache, timeLiveToCache);
-                }
+    public void put(String key, T value, int timeToLive){
 
-        } finally{
+            lock.lock();
+                checkCache();
+                if (timeToLive > 0) {
+                    long timeLiveToCache = timeToLive * 1000 + System.currentTimeMillis();
+                    cacheValue.put(key, value);
+                    cacheTimeLive.put(key, timeLiveToCache);
+                }
             lock.unlock();
-        }
+
 
     }
 
-    private void checkRCache(){
+    private void checkCache(){
         long timeNow = System.currentTimeMillis();
         for (String elementCache: cacheTimeLive.keySet()) {
-            try {
-                lock.lock();
-                    if (cacheTimeLive.get(elementCache) < timeNow){
-                        cacheTimeLive.remove(elementCache);
-                        cacheValue.remove(elementCache);
-                    }
-            } finally{
-                lock.unlock();
+            if (cacheTimeLive.get(elementCache) < timeNow){
+                cacheTimeLive.remove(elementCache);
+                cacheValue.remove(elementCache);
             }
-
         }
 
     }
 
-    @Override
-    public void run() {
-
-    }
 }
 
