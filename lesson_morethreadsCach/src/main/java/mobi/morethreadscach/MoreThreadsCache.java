@@ -9,19 +9,18 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by user on 14.03.2017.
  */
-public class morethrreadscache<T> implements Runnable{
+public class MoreThreadsCache<T> implements Runnable{
 
     private Map<String, T> cacheValue = new HashMap<String, T>();
     private Map<String, Long> cacheTimeLive = new HashMap<String, Long>();
     private Lock lock = new ReentrantLock();;
 
-
-    public T get(String keyRCache){
+    public T get(String keyCache){
         checkRCache();
         try {
             lock.lock();
-                if (cacheTimeLive.containsKey(keyRCache)){
-                    return cacheValue.get(keyRCache);
+                if (cacheTimeLive.containsKey(keyCache)){
+                    return cacheValue.get(keyCache);
                 }
 
         } finally{
@@ -32,14 +31,14 @@ public class morethrreadscache<T> implements Runnable{
     };
 
 
-    public void put(String keyRCache, T valueRCashe, int timeLive){
+    public void put(String keyCache, T valueCashe, int timeLive){
         checkRCache();
         try {
             lock.lock();
                 if (timeLive > 0) {
                     long timeLiveToCache = timeLive * 1000 + System.currentTimeMillis();
-                    cacheValue.put(keyRCache, valueRCashe);
-                    cacheTimeLive.put(keyRCache, timeLiveToCache);
+                    cacheValue.put(keyCache, valueCashe);
+                    cacheTimeLive.put(keyCache, timeLiveToCache);
                 }
 
         } finally{
@@ -50,12 +49,12 @@ public class morethrreadscache<T> implements Runnable{
 
     private void checkRCache(){
         long timeNow = System.currentTimeMillis();
-        for (String rElementCache: cacheTimeLive.keySet()) {
+        for (String elementCache: cacheTimeLive.keySet()) {
             try {
                 lock.lock();
-                    if (cacheTimeLive.get(rElementCache) < timeNow){
-                        cacheTimeLive.remove(rElementCache);
-                        cacheValue.remove(rElementCache);
+                    if (cacheTimeLive.get(elementCache) < timeNow){
+                        cacheTimeLive.remove(elementCache);
+                        cacheValue.remove(elementCache);
                     }
             } finally{
                 lock.unlock();
