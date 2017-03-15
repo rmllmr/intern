@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Created by user on 15.03.2017.
  */
-public class morethrreadscachTest extends morethrreadscach {
+public class morethrreadscacheTest extends morethrreadscache {
     @Override
     public void run(){
         this.put("firstKeyCache", "firstValueCache", 3000);
@@ -19,8 +19,8 @@ public class morethrreadscachTest extends morethrreadscach {
     @Test
     public void get() throws Exception {
 
-        Thread firstThread = new Thread(new morethrreadscach<String>());
-        Thread secondThread = new Thread(new morethrreadscach<String>());
+        Thread firstThread = new Thread(new morethrreadscache<String>());
+        Thread secondThread = new Thread(new morethrreadscache<String>());
         firstThread.start();
         secondThread.start();
     }
@@ -28,8 +28,8 @@ public class morethrreadscachTest extends morethrreadscach {
     @Test
     public void put() throws Exception {
 
-        Thread firstThread = new Thread(new morethrreadscach<String>());
-        Thread secondThread = new Thread(new morethrreadscach<String>());
+        Thread firstThread = new Thread(new morethrreadscache<String>());
+        Thread secondThread = new Thread(new morethrreadscache<String>());
         firstThread.start();
         secondThread.start();
     }

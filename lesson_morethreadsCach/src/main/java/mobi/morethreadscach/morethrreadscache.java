@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by user on 14.03.2017.
  */
-public class morethrreadscach<T> implements Runnable{
+public class morethrreadscache<T> implements Runnable{
 
     private Map<String, T> cacheValue = new HashMap<String, T>();
     private Map<String, Long> cacheTimeLive = new HashMap<String, Long>();
