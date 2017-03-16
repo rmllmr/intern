@@ -1,10 +1,9 @@
 package mobi.morethreadscach;
 
 import org.junit.Test;
-
+import static org.junit.Assert.*;
 import java.util.Random;
 
-import static org.junit.Assert.*;
 
 /**
  * Created by user on 15.03.2017.
@@ -12,6 +11,7 @@ import static org.junit.Assert.*;
 public class MoreThreadsCacheTest {
     @Test
     public void get() throws Exception {
+
         MoreThreadsCache<Integer> testCache = new MoreThreadsCache<>();
         Thread getThreadGet = new Thread(new MoreThreadsCacheTestGet(testCache));
         Thread getThreadSet = new Thread(new MoreThreadsCacheTestSet(testCache));
@@ -44,7 +44,9 @@ class MoreThreadsCacheTestGet implements Runnable {
     @Override
     public void run(){
         for (Integer i = 0; i < 10; i++) {
-            testCache.get(i.toString());
+
+            assertEquals(" EL " +i.toString() + " = ", i.intValue(), testCache.get(i.toString()).intValue());
+
         }
     }
 
@@ -67,8 +69,7 @@ class MoreThreadsCacheTestSet implements Runnable {
     public void run() {
 
         for (Integer i = 0; i < 10; i++) {
-            testCache.put(i.toString(), randomValue(), 5000);
-
+            testCache.put(i.toString(), i, 5000);
         }
 
     }
