@@ -2,3 +2,5 @@ rootProject.name = 'intern'
 include 'lesson1'
 include 'lesson_morethreadsCach'
 include 'lesson_ProccesEventStack'
+include 'lesson_TestMongoDBSpring'
+
