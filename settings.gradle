@@ -1,3 +1,4 @@
 rootProject.name = 'intern'
-include 'lesson_MoreThreadsCach'
-
+include 'lesson1'
+include 'lesson_morethreadsCach'
+include 'lesson_ProccesEventStack'
