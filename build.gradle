@@ -1,5 +1,7 @@
 buildscript {
     repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
         mavenCentral()
     }
     dependencies {
@@ -7,35 +9,39 @@ buildscript {
     }
 }
 
-
 allprojects {
+
     group 'mobi.qrok'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-
-    sourceCompatibility = 1.8
-
-    repositories {
-        mavenCentral()
-    }
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: 'spring-boot'
 
     jar {
-        baseName = 'gs-accessing-data-mongodb'
+        baseName = 'gs-accessing-data-rest'
         version =  '0.1.0'
     }
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.11'
-        compile("org.springframework.boot:spring-boot-starter-data-mongodb")
-        testCompile("org.springframework.boot:spring-boot-starter-test")
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-release" }
     }
 
+    dependencies {
+        compile("org.springframework.boot:spring-boot-starter-web")
+        compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+        testCompile("junit:junit")
+    }
 
+    task wrapper(type: Wrapper) {
+        gradleVersion = '1.11'
+    }
 }
 
 
