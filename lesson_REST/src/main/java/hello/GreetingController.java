@@ -1,15 +1,18 @@
 package hello;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
 @RestController
 public class GreetingController {
@@ -48,15 +51,16 @@ public class GreetingController {
     }
 
     @RequestMapping("/averageTemp")
-    public String averageTemp(@RequestParam(value="timestamp", defaultValue="1") String timestamp) {
+    public String averageTemp() {
 
-        mongoTemplate.ex
-        long timeFindById = System.currentTimeMillis();
-        BaseObject object;
-        repository.findAll(Ex)
-        object = repository.findById(id);
-        timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + timeFindById+" ----       " +object.toString();
+        long timeAverT = System.currentTimeMillis();
+        Aggregation aggregation = Aggregation.newAggregation(group("id").avg("temp").as("averTemp"));
+
+        AggregationResults<AverTemp> groupResults = mongoTemplate.aggregate(aggregation, "baseObject", AverTemp.class);
+        AverTemp result = groupResults.getUniqueMappedResult();
+        timeAverT = System.currentTimeMillis() - timeAverT;
+
+        return " aver T = " + result.toString() + " time  = "+ timeAverT ;
     }
 
     @RequestMapping("/removeAll")
