@@ -1,4 +1,6 @@
-package hello;
+package testmongorest.service;
+
+import testmongorest.dataconfig.BaseObject;
 
 import java.util.Random;
 

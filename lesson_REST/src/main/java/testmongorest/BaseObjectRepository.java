@@ -1,6 +1,7 @@
-package hello;
+package testmongorest;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import testmongorest.dataconfig.BaseObject;
 
 
 /**

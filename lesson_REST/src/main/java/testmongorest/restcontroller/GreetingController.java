@@ -1,4 +1,4 @@
-package hello;
+package testmongorest.restcontroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import testmongorest.BaseObjectRepository;
+import testmongorest.dataconfig.AverTemp;
+import testmongorest.dataconfig.BaseObject;
+import testmongorest.service.BaseObjectParams;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
@@ -48,6 +54,19 @@ public class GreetingController {
         object = repository.findById(id);
         timeFindById = System.currentTimeMillis() - timeFindById;
         return "findId # "+ id+ ", time - " + timeFindById+" ----       " +object.toString();
+    }
+
+    @RequestMapping("/findByTS")
+    public String findByTS(@RequestParam(value="timestamp", defaultValue="1") long timestamp) {
+
+        long timeFindById = System.currentTimeMillis();
+        long findCount;
+        Query query = new Query();
+        long timeStamp1 = 1490602557822L;
+        query.addCriteria(Criteria.where("timeStamp").is(timeStamp1));
+        findCount = mongoTemplate.count(query, BaseObject.class,"BaseObject");
+        timeFindById = System.currentTimeMillis() - timeFindById;
+        return "findId # "+ findCount+ ", time - " + timeFindById+" ----       ";
     }
 
     @RequestMapping("/averageTemp")
@@ -99,6 +118,7 @@ public class GreetingController {
         long timeSaveBlock = System.currentTimeMillis();
         BaseObjectParams objectGen = new BaseObjectParams();
         ArrayList<BaseObject> baseObject100 = new ArrayList<>();
+
         int k = 0;
         for (int i = 0; i < number; i++) {
             k++;
@@ -106,6 +126,7 @@ public class GreetingController {
                 k = 0;
                 repository.save(baseObject100);
                 baseObject100.removeAll(baseObject100);
+
                 System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
                 timeSaveBlock = System.currentTimeMillis();
             }
@@ -118,9 +139,7 @@ public class GreetingController {
         baseObject100.removeAll(baseObject100);
 
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-
-
         return "Saved "+ number+ " obj., size block "+ sizeBlock+ ". Time = "+timeSaveAllObject;
-    }
 
+    }
 }

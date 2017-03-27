@@ -1,4 +1,4 @@
-package hello;
+package testmongorest.dataconfig;
 
 /**
  * Created by user on 24.03.2017.

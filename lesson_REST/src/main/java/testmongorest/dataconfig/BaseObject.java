@@ -1,4 +1,4 @@
-package hello;
+package testmongorest.dataconfig;
 
 import org.springframework.data.annotation.Id;
 
@@ -26,19 +26,6 @@ public class BaseObject {
 
     public BaseObject(String id) {
         this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseObject{" +
-                "id='" + id + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", shock=" + shock +
-                ", button=" + button +
-                ", temp=" + temp +
-                '}';
     }
 
     public String getId() {
