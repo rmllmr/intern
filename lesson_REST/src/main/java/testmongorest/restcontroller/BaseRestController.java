@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoOptionsFactoryBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -21,7 +23,7 @@ import testmongorest.service.BaseObjectParams;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
 @RestController
-public class GreetingController {
+public class BaseRestController {
 
     @Autowired
     private BaseObjectRepository repository;
@@ -53,20 +55,35 @@ public class GreetingController {
         BaseObject object;
         object = repository.findById(id);
         timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + timeFindById+" ----       " +object.toString();
+        return "findId # "+ id+ ", time - " + timeFindById+" - " +object.toString();
     }
 
-    @RequestMapping("/findByTS")
-    public String findByTS(@RequestParam(value="timestamp", defaultValue="1") long timestamp) {
+    @RequestMapping("/countShockByTS")
+    public String countShockByTS(@RequestParam(value="timestamp", defaultValue="10") long timestamp) {
 
-        long timeFindById = System.currentTimeMillis();
+        long timeFindByTS = System.currentTimeMillis();
         long findCount;
         Query query = new Query();
-        long timeStamp1 = 1490602557822L;
-        query.addCriteria(Criteria.where("timeStamp").is(timeStamp1));
-        findCount = mongoTemplate.count(query, BaseObject.class,"BaseObject");
-        timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ findCount+ ", time - " + timeFindById+" ----       ";
+        query.addCriteria(Criteria.where("shock").is(true).and("timeStamp").is(timestamp));
+
+        findCount = mongoTemplate.count(query, BaseObject.class, "baseObject");
+        timeFindByTS = System.currentTimeMillis() - timeFindByTS;
+
+        return " Count shock = " + findCount + " for TS " + timestamp +" time = " + timeFindByTS;
+    }
+
+    @RequestMapping("/countShockByRangeTS")
+    public String countShockByRangeTS(@RequestParam(value="timestampF", defaultValue="10") long timestampFirst, @RequestParam(value="timestampL", defaultValue="10") long timestampLast) {
+
+        long timeFindByTS = System.currentTimeMillis();
+        long findCount;
+        Query query = new Query();
+        query.addCriteria(Criteria.where("shock").is(true).and("timeStamp").exists(true).andOperator(Criteria.where("timeStamp").gt(timestampFirst), Criteria.where("timeStamp").lt(timestampLast)));
+
+        findCount = mongoTemplate.count(query, BaseObject.class, "baseObject");
+        timeFindByTS = System.currentTimeMillis() - timeFindByTS;
+
+        return " Count shock = " + findCount + " for range TS [" + timestampFirst + " - " + timestampLast +"] time = " + timeFindByTS;
     }
 
     @RequestMapping("/averageTemp")
@@ -106,7 +123,6 @@ public class GreetingController {
             }
         }
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-
 
         return timeSaveAllObject;
     }

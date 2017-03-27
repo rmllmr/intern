@@ -17,6 +17,19 @@ public class BaseObject {
     private boolean button;
     private int temp;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", shock=" + shock +
+                ", button=" + button +
+                ", temp=" + temp +
+                '}';
+    }
+
     public BaseObject() {
     }
 
