@@ -55,7 +55,7 @@ public class BaseRestController {
         BaseObject object;
         object = repository.findById(id);
         timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + timeFindById+" - " +object.toString();
+        return "findId # "+ id+ ", time - " + timeFindById/1000+" - " +object.toString();
     }
 
     @RequestMapping("/countShockByTS")
@@ -69,7 +69,7 @@ public class BaseRestController {
         findCount = mongoTemplate.count(query, BaseObject.class, "baseObject");
         timeFindByTS = System.currentTimeMillis() - timeFindByTS;
 
-        return " Count shock = " + findCount + " for TS " + timestamp +" time = " + timeFindByTS;
+        return " Count shock = " + findCount + " for TS " + timestamp +" time = " + (double)timeFindByTS/1000;
     }
 
     @RequestMapping("/countShockByRangeTS")
@@ -83,20 +83,20 @@ public class BaseRestController {
         findCount = mongoTemplate.count(query, BaseObject.class, "baseObject");
         timeFindByTS = System.currentTimeMillis() - timeFindByTS;
 
-        return " Count shock = " + findCount + " for range TS [" + timestampFirst + " - " + timestampLast +"] time = " + timeFindByTS;
+        return " Count shock = " + findCount + " for range TS [" + timestampFirst + " - " + timestampLast +"] time = " + (double)timeFindByTS/1000;
     }
 
     @RequestMapping("/averageTemp")
     public String averageTemp() {
 
-        long timeAverT = System.currentTimeMillis();
+        long timeAverageTemp = System.currentTimeMillis();
         Aggregation aggregation = Aggregation.newAggregation(group("id").avg("temp").as("averTemp"));
 
         AggregationResults<AverTemp> groupResults = mongoTemplate.aggregate(aggregation, "baseObject", AverTemp.class);
         AverTemp result = groupResults.getUniqueMappedResult();
-        timeAverT = System.currentTimeMillis() - timeAverT;
+        timeAverageTemp = System.currentTimeMillis() - timeAverageTemp;
 
-        return " aver T = " + result.toString() + " time  = "+ timeAverT ;
+        return " Average Temp = " + result.toString() + " time  = "+ (double)timeAverageTemp/1000;
     }
 
     @RequestMapping("/removeAll")
@@ -106,14 +106,14 @@ public class BaseRestController {
 
     }
 
-    @RequestMapping("/M1")
-    public long M1() {
+    @RequestMapping("/timeRecordByOne")
+    public String timeRecordByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
         BaseObjectParams objectGen = new BaseObjectParams();
         int k = 0;
-        for (int i = 0; i <  1000000; i++) {
+        for (int i = 0; i <  1000000*number; i++) {
             repository.save(objectGen.baseObjectFillParams(new BaseObject(counter.incrementAndGet())));
             k ++;
             if (k == 10001) {
@@ -124,10 +124,11 @@ public class BaseRestController {
         }
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
 
-        return timeSaveAllObject;
+        return " Time records by one (" + number + " million base object) = "+ (double)timeSaveAllObject/1000;
     }
 
-    @RequestMapping("/NB")
+
+    @RequestMapping("/timeRecordByBlock")
     public String NB(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
 
         long timeSaveAllObject = System.currentTimeMillis();
@@ -155,7 +156,7 @@ public class BaseRestController {
         baseObject100.removeAll(baseObject100);
 
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-        return "Saved "+ number+ " obj., size block "+ sizeBlock+ ". Time = "+timeSaveAllObject;
+        return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
 
     }
 }
