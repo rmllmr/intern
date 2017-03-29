@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoOptionsFactoryBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -19,6 +20,8 @@ import testmongorest.BaseObjectRepository;
 import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
 import testmongorest.service.BaseObjectParams;
+
+import javax.swing.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
@@ -129,12 +132,14 @@ public class BaseRestController {
 
 
     @RequestMapping("/timeRecordByBlock")
-    public String NB(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
+    public JFrame timeRecordByBlock(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
         BaseObjectParams objectGen = new BaseObjectParams();
         ArrayList<BaseObject> baseObject100 = new ArrayList<>();
+        ArrayList<Double> yData = new ArrayList<Double>();
+        ArrayList<Integer> xData = new ArrayList<Integer>();
 
         int k = 0;
         for (int i = 0; i < number; i++) {
@@ -145,7 +150,10 @@ public class BaseRestController {
                 baseObject100.removeAll(baseObject100);
 
                 System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
+
                 timeSaveBlock = System.currentTimeMillis();
+                yData.add(Double.valueOf(timeSaveBlock/1000));
+                xData.add(i);
             }
             else{
                 baseObject100.add(objectGen.baseObjectFillParams(new BaseObject(counter.incrementAndGet())));
@@ -156,7 +164,14 @@ public class BaseRestController {
         baseObject100.removeAll(baseObject100);
 
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-        return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
+
+        XYChart rezultChart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
+
+        return new SwingWrapper(rezultChart).displayChart();
+
+        //return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
+
+
 
     }
 }
