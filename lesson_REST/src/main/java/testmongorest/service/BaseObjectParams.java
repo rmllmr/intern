@@ -1,6 +1,7 @@
 package testmongorest.service;
 
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Position;
 
 import java.util.Random;
 
@@ -12,6 +13,7 @@ public class BaseObjectParams implements BaseObjectGenerator {
     public BaseObjectParams() {
 
     }
+
 
     @Override
     public BaseObject baseObjectFillParams(BaseObject objectFill) {
@@ -26,4 +28,23 @@ public class BaseObjectParams implements BaseObjectGenerator {
 
         return objectFill;
     }
+
+    
+    @Override
+    public Position positionFillParams(Position objectPosition) {
+        Random random = new Random();
+
+        objectPosition.setAddress(random.nextLong());
+        objectPosition.setAccuracyRadius(random.nextFloat());
+        objectPosition.setHasMoved(random.nextBoolean());
+        objectPosition.setState(random.nextInt(500));
+        objectPosition.setMappedPosition(random.nextInt(500));
+        objectPosition.setX(random.nextFloat());
+        objectPosition.setY(random.nextFloat());
+        objectPosition.setZ(random.nextFloat());
+        objectPosition.setTimestamp(System.currentTimeMillis());
+
+        return objectPosition;
+    }
+
 }

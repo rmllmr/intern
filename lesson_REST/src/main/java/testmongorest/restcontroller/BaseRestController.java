@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -19,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import testmongorest.BaseObjectRepository;
 import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Position;
 import testmongorest.service.BaseObjectParams;
-
-import javax.swing.*;
+import testmongorest.service.timeRecordObjectByBlock;
+import testmongorest.service.timeRecordObjectByOne;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
@@ -35,15 +33,6 @@ public class BaseRestController {
     MongoTemplate mongoTemplate;
 
     private final AtomicLong counter = new AtomicLong();
-    private static BaseObject tempObject;
-
-    @RequestMapping("/newBaseObject")
-    public BaseObject newBaseObject(@RequestParam(value="lat", defaultValue="50") long latitude, @RequestParam(value="long", defaultValue="50") long longitude, @RequestParam(value="timestamp", defaultValue="8500") long   timeStamp)  {
-
-        tempObject = new BaseObject(counter.incrementAndGet());
-        repository.save(tempObject);
-        return tempObject;
-    }
 
     @RequestMapping("/findAll")
     public List<BaseObject> findAll() {
@@ -58,7 +47,7 @@ public class BaseRestController {
         BaseObject object;
         object = repository.findById(id);
         timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + timeFindById/1000+" - " +object.toString();
+        return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
     }
 
     @RequestMapping("/countShockByTS")
@@ -112,66 +101,15 @@ public class BaseRestController {
     @RequestMapping("/timeRecordByOne")
     public String timeRecordByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
 
-        long timeSaveAllObject = System.currentTimeMillis();
-        long timeSaveBlock = System.currentTimeMillis();
-        BaseObjectParams objectGen = new BaseObjectParams();
-        int k = 0;
-        for (int i = 0; i <  1000000*number; i++) {
-            repository.save(objectGen.baseObjectFillParams(new BaseObject(counter.incrementAndGet())));
-            k ++;
-            if (k == 10001) {
-                k = 0;
-                System.out.println("#"+ i + " time "+ (System.currentTimeMillis() - timeSaveBlock));
-                timeSaveBlock = System.currentTimeMillis();
-            }
-        }
-        timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
+        return new timeRecordObjectByOne(number).GetResult(repository, counter, new Position());
 
-        return " Time records by one (" + number + " million base object) = "+ (double)timeSaveAllObject/1000;
     }
 
 
     @RequestMapping("/timeRecordByBlock")
-    public JFrame timeRecordByBlock(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
+    public String timeRecordByBlock(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
 
-        long timeSaveAllObject = System.currentTimeMillis();
-        long timeSaveBlock = System.currentTimeMillis();
-        BaseObjectParams objectGen = new BaseObjectParams();
-        ArrayList<BaseObject> baseObject100 = new ArrayList<>();
-        ArrayList<Double> yData = new ArrayList<Double>();
-        ArrayList<Integer> xData = new ArrayList<Integer>();
-
-        int k = 0;
-        for (int i = 0; i < number; i++) {
-            k++;
-            if (k == sizeBlock) {
-                k = 0;
-                repository.save(baseObject100);
-                baseObject100.removeAll(baseObject100);
-
-                System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
-
-                timeSaveBlock = System.currentTimeMillis();
-                yData.add(Double.valueOf(timeSaveBlock/1000));
-                xData.add(i);
-            }
-            else{
-                baseObject100.add(objectGen.baseObjectFillParams(new BaseObject(counter.incrementAndGet())));
-            }
-
-        }
-        repository.save(baseObject100);
-        baseObject100.removeAll(baseObject100);
-
-        timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-
-        XYChart rezultChart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
-
-        return new SwingWrapper(rezultChart).displayChart();
-
-        //return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
-
-
+        return new timeRecordObjectByBlock(number, sizeBlock).GetResult(repository, counter, new Position());
 
     }
 }
