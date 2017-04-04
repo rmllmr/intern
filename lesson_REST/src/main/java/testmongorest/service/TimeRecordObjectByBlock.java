@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by user on 03.04.2017.
  */
-public class timeRecordObjectByBlock {
+public class TimeRecordObjectByBlock {
 
     private final long number;
     private final long sizeBlock;
 
 
-    public timeRecordObjectByBlock(long number, long sizeBlock) {
+    public TimeRecordObjectByBlock(long number, long sizeBlock) {
         this.number = number;
         this.sizeBlock = sizeBlock;
     }
@@ -26,39 +26,31 @@ public class timeRecordObjectByBlock {
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
-        FillObjectParams objectGen = new FillObjectParams();
-        ArrayList<Position> baseObject100 = new ArrayList<>();
-     //   ArrayList<Double> yData = new ArrayList<Double>();
-     //   ArrayList<Integer> xData = new ArrayList<Integer>();
+        FillObjectParams fillObjectParams = new FillObjectParams();
+        ArrayList<Position> blockObjects = new ArrayList<>();
 
         int k = 0;
         for (int i = 0; i < number; i++) {
             k++;
             if (k == sizeBlock) {
                 k = 0;
-                repository.save(baseObject100);
-                baseObject100.removeAll(baseObject100);
+                repository.save(blockObjects);
+                blockObjects.removeAll(blockObjects);
 
                 System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
 
                 timeSaveBlock = System.currentTimeMillis();
-     //           yData.add(Double.valueOf(timeSaveBlock/1000));
-     //           xData.add(i);
             }
             else{
                 localObject.setId(counter.incrementAndGet());
-                baseObject100.add(objectGen.positionFillParams(localObject));
+                blockObjects.add(fillObjectParams.positionFillParams(localObject));
             }
 
         }
-        repository.save(baseObject100);
-        baseObject100.removeAll(baseObject100);
+        repository.save(blockObjects);
+        blockObjects.removeAll(blockObjects);
 
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-
-//        XYChart rezultChart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
-
-//        return new SwingWrapper(rezultChart).displayChart();
 
         return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
 
@@ -69,39 +61,30 @@ public class timeRecordObjectByBlock {
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
-        FillObjectParams objectGen = new FillObjectParams();
-        ArrayList<BaseObject> baseObject100 = new ArrayList<>();
-        ArrayList<Double> yData = new ArrayList<Double>();
-        ArrayList<Integer> xData = new ArrayList<Integer>();
+        FillObjectParams fillObjectParams = new FillObjectParams();
+        ArrayList<BaseObject> blockObjects = new ArrayList<>();
 
         int k = 0;
         for (int i = 0; i < number; i++) {
             k++;
             if (k == sizeBlock) {
                 k = 0;
-                repository.save(baseObject100);
-                baseObject100.removeAll(baseObject100);
+                repository.save(blockObjects);
+                blockObjects.removeAll(blockObjects);
 
                 System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
-
                 timeSaveBlock = System.currentTimeMillis();
-                yData.add(Double.valueOf(timeSaveBlock/1000));
-                xData.add(i);
             }
             else{
                 localObject.setId(counter.incrementAndGet());
-                baseObject100.add(objectGen.baseObjectFillParams(localObject));
+                blockObjects.add(fillObjectParams.baseObjectFillParams(localObject));
             }
 
         }
-        repository.save(baseObject100);
-        baseObject100.removeAll(baseObject100);
+        repository.save(blockObjects);
+        blockObjects.removeAll(blockObjects);
 
         timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
-
-//        XYChart rezultChart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
-
-//        return new SwingWrapper(rezultChart).displayChart();
 
         return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
 

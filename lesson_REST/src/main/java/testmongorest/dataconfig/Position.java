@@ -104,6 +104,7 @@ public class Position {
     }
 
     public void setTimestamp(long timestamp) {
+
         this.timeStamp = timestamp;
     }
 }

@@ -9,8 +9,8 @@ public class AverTemp {
     private double averTemp;
 
     public AverTemp() {
-    }
 
+    }
     public String getId() {
         return id;
     }

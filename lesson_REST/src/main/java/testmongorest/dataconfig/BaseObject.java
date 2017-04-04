@@ -34,7 +34,6 @@ public class BaseObject {
     }
 
     public void setId(long id) {this.id = String.valueOf(id);}
-
     public void setId(String id) {this.id = id;}
 
     public String getId() {

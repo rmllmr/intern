@@ -1,6 +1,5 @@
 package testmongorest.restcontroller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +17,8 @@ import testmongorest.PositionObjectRepository;
 import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
 import testmongorest.dataconfig.Position;
-import testmongorest.service.timeRecordObjectByBlock;
-import testmongorest.service.timeRecordObjectByOne;
+import testmongorest.service.TimeRecordObjectByBlock;
+import testmongorest.service.TimeRecordObjectByOne;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 
@@ -34,7 +32,7 @@ public class BaseRestController {
     private PositionObjectRepository positionObjectRepository;
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     private final AtomicLong counter = new AtomicLong();
 
@@ -137,14 +135,14 @@ public class BaseRestController {
     @RequestMapping("/timeRecordByOne")
     public String timeRecordByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
 
-        return new timeRecordObjectByOne(number).GetResultBase(baseObjectRepository, counter, new BaseObject());
+        return new TimeRecordObjectByOne(number).GetResultBase(baseObjectRepository, counter, new BaseObject());
 
     }
 
     @RequestMapping("/timeRecordPositionByOne")
     public String timeRecordPositionByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
 
-        return new timeRecordObjectByOne(number).GetResult(positionObjectRepository, counter, new Position());
+        return new TimeRecordObjectByOne(number).GetResult(positionObjectRepository, counter, new Position());
 
     }
 
@@ -152,14 +150,14 @@ public class BaseRestController {
     @RequestMapping("/timeRecordByBlock")
     public String timeRecordByBlock(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
 
-        return new timeRecordObjectByBlock(number, sizeBlock).GetResultBase(baseObjectRepository, counter, new BaseObject());
+        return new TimeRecordObjectByBlock(number, sizeBlock).GetResultBase(baseObjectRepository, counter, new BaseObject());
 
     }
 
     @RequestMapping("/timeRecordPositionByBlock")
     public String timeRecordPositionByBlock(@RequestParam(value="number", defaultValue="10000") long number, @RequestParam(value="sizeblock", defaultValue="500") long sizeBlock) {
 
-        return new timeRecordObjectByBlock(number, sizeBlock).GetResult(positionObjectRepository, counter, new Position());
+        return new TimeRecordObjectByBlock(number, sizeBlock).GetResult(positionObjectRepository, counter, new Position());
 
     }
 

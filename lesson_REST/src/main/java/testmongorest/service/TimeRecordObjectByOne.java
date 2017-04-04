@@ -10,12 +10,12 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by user on 03.04.2017.
  */
-public class timeRecordObjectByOne{
+public class TimeRecordObjectByOne {
 
     private final long number;
 
 
-    public timeRecordObjectByOne(long number) {
+    public TimeRecordObjectByOne(long number) {
         this.number = number;
     }
 
@@ -23,11 +23,11 @@ public class timeRecordObjectByOne{
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
-        FillObjectParams objectGen = new FillObjectParams();
+        FillObjectParams fillObjectParams = new FillObjectParams();
         int k = 0;
         for (int i = 0; i <  1000000*number; i++) {
             localObject.setId(counter.incrementAndGet());
-            repository.save(objectGen.positionFillParams(localObject));
+            repository.save(fillObjectParams.positionFillParams(localObject));
             k ++;
             if (k == 10001) {
                 k = 0;
@@ -46,11 +46,11 @@ public class timeRecordObjectByOne{
 
         long timeSaveAllObject = System.currentTimeMillis();
         long timeSaveBlock = System.currentTimeMillis();
-        FillObjectParams objectGen = new FillObjectParams();
+        FillObjectParams fillObjectParams = new FillObjectParams();
         int k = 0;
         for (int i = 0; i <  1000000*number; i++) {
             localObject.setId(counter.incrementAndGet());
-            repository.save(objectGen.baseObjectFillParams(localObject));
+            repository.save(fillObjectParams.baseObjectFillParams(localObject));
             k ++;
             if (k == 10001) {
                 k = 0;
