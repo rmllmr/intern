@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import testmongorest.BaseObjectRepository;
+import testmongorest.DeviceObjectRepository;
 import testmongorest.PositionObjectRepository;
 import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
 import testmongorest.service.TimeRecordObjectByBlock;
 import testmongorest.service.TimeRecordObjectByOne;
@@ -30,6 +32,9 @@ public class BaseRestController {
 
     @Autowired
     private PositionObjectRepository positionObjectRepository;
+
+    @Autowired
+    private DeviceObjectRepository deviceObjectRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -81,8 +86,6 @@ public class BaseRestController {
             return "findId # " + result.getId() + ", time - " + (double) timeFindByTS / 1000 + " - " + result.getTimestamp();
         }
     }
-
-
 
     @RequestMapping("/countShockByTS")
     public String countShockByTS(@RequestParam(value="timestamp", defaultValue="10") long timestamp) {
@@ -143,6 +146,13 @@ public class BaseRestController {
     public String timeRecordPositionByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
 
         return new TimeRecordObjectByOne(number).GetResult(positionObjectRepository, counter, new Position());
+
+    }
+
+    @RequestMapping("/timeRecordDeviceByOne")
+    public String timeRecordDeviceByOne(@RequestParam(value="numberofmillions", defaultValue="1") long number) {
+
+        return new TimeRecordObjectByOne(number).GetResultDevice(deviceObjectRepository, counter, new Device());
 
     }
 

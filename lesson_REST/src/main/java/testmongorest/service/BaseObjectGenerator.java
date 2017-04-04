@@ -1,6 +1,7 @@
 package testmongorest.service;
 
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
 
 /**
@@ -11,4 +12,5 @@ public interface BaseObjectGenerator {
     BaseObject baseObjectFillParams(BaseObject object);
     Position positionFillParams(Position object);
 
+    Device deviceFillParams(Device objectPosition);
 }

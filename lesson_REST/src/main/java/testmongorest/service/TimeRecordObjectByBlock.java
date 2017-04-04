@@ -1,8 +1,10 @@
 package testmongorest.service;
 
 import testmongorest.BaseObjectRepository;
+import testmongorest.DeviceObjectRepository;
 import testmongorest.PositionObjectRepository;
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
 
 import java.util.ArrayList;
@@ -90,5 +92,40 @@ public class TimeRecordObjectByBlock {
 
 
     }
+
+    public String GetResultDevice(DeviceObjectRepository repository, AtomicLong counter, Device localObject ){
+
+        long timeSaveAllObject = System.currentTimeMillis();
+        long timeSaveBlock = System.currentTimeMillis();
+        FillObjectParams fillObjectParams = new FillObjectParams();
+        ArrayList<Device> blockObjects = new ArrayList<>();
+
+        int k = 0;
+        for (int i = 0; i < number; i++) {
+            k++;
+            if (k == sizeBlock) {
+                k = 0;
+                repository.save(blockObjects);
+                blockObjects.removeAll(blockObjects);
+
+                System.out.println("# "+(i+1)+ " time = "+(System.currentTimeMillis() - timeSaveBlock));
+                timeSaveBlock = System.currentTimeMillis();
+            }
+            else{
+                localObject.setId(counter.incrementAndGet());
+                blockObjects.add(fillObjectParams.deviceFillParams(localObject));
+            }
+
+        }
+        repository.save(blockObjects);
+        blockObjects.removeAll(blockObjects);
+
+        timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
+
+        return " Time records by block ( "+ number+ " base object, size block "+ sizeBlock+ " ) = "+ (double)timeSaveAllObject/1000;
+
+
+    }
+
 
 }

@@ -1,8 +1,10 @@
 package testmongorest.service;
 
 import testmongorest.BaseObjectRepository;
+import testmongorest.DeviceObjectRepository;
 import testmongorest.PositionObjectRepository;
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +53,28 @@ public class TimeRecordObjectByOne {
         for (int i = 0; i <  1000000*number; i++) {
             localObject.setId(counter.incrementAndGet());
             repository.save(fillObjectParams.baseObjectFillParams(localObject));
+            k ++;
+            if (k == 10001) {
+                k = 0;
+                System.out.println("#"+ i + " time "+ (System.currentTimeMillis() - timeSaveBlock));
+                timeSaveBlock = System.currentTimeMillis();
+            }
+        }
+        timeSaveAllObject = System.currentTimeMillis() - timeSaveAllObject;
+
+        return " Time records by one (" + number + " million base object) = "+ (double)timeSaveAllObject/1000;
+
+    }
+
+    public String GetResultDevice(DeviceObjectRepository repository, AtomicLong counter, Device localObject ){
+
+        long timeSaveAllObject = System.currentTimeMillis();
+        long timeSaveBlock = System.currentTimeMillis();
+        FillObjectParams fillObjectParams = new FillObjectParams();
+        int k = 0;
+        for (int i = 0; i <  1000000*number; i++) {
+            localObject.setId(counter.incrementAndGet());
+            repository.save(fillObjectParams.deviceFillParams(localObject));
             k ++;
             if (k == 10001) {
                 k = 0;

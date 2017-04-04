@@ -1,7 +1,11 @@
 package testmongorest.service;
 
 import testmongorest.dataconfig.BaseObject;
+import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
+import testmongorest.dataconfig.enums.AppRole;
+import testmongorest.dataconfig.enums.NetworkRole;
+import testmongorest.dataconfig.enums.NetworkType;
 
 import java.util.Random;
 
@@ -40,6 +44,26 @@ public class FillObjectParams implements BaseObjectGenerator {
         objectPosition.setX(random.nextFloat());
         objectPosition.setY(random.nextFloat());
         objectPosition.setZ(random.nextFloat());
+        objectPosition.setTimestamp(System.currentTimeMillis());
+
+        return objectPosition;
+    }
+
+    @Override
+    public Device deviceFillParams(Device objectPosition) {
+        Random random = new Random();
+
+        objectPosition.setAddress(random.nextLong());
+        objectPosition.setActivated(random.nextBoolean());
+        objectPosition.setAnchorId((byte) random.nextInt(256));
+        objectPosition.setAppRole(AppRole.ANCHOR);
+        objectPosition.setBattery(random.nextDouble());
+        objectPosition.setConnected(random.nextBoolean());
+        objectPosition.setDeviceState((byte) random.nextInt(256));
+        objectPosition.setRssi(random.nextInt());
+        objectPosition.setNetworkRole(NetworkRole.END_DEVICE);
+        objectPosition.setNetworkType(NetworkType.GENERIC);
+        objectPosition.setSoftwareVersion(random.nextInt(128));
         objectPosition.setTimestamp(System.currentTimeMillis());
 
         return objectPosition;
