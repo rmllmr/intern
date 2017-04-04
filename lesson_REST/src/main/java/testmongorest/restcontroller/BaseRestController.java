@@ -70,7 +70,7 @@ public class BaseRestController {
         Query query = new Query();
         query.addCriteria(Criteria.where("timeStamp").is(timeStamp));
 
-        Position result = mongoTemplate.findOne(query, Position.class , "Position");
+        Position result = mongoTemplate.findOne(query, Position.class , "position");
 
         timeFindByTS = System.currentTimeMillis() - timeFindByTS;
 
