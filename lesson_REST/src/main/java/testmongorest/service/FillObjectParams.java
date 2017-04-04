@@ -8,9 +8,9 @@ import java.util.Random;
 /**
  * Created by user on 23.03.2017.
  */
-public class BaseObjectParams implements BaseObjectGenerator {
+public class FillObjectParams implements BaseObjectGenerator {
 
-    public BaseObjectParams() {
+    public FillObjectParams() {
 
     }
 
@@ -29,7 +29,6 @@ public class BaseObjectParams implements BaseObjectGenerator {
         return objectFill;
     }
 
-    
     @Override
     public Position positionFillParams(Position objectPosition) {
         Random random = new Random();
