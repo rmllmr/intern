@@ -19,6 +19,7 @@ import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
 import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
+import testmongorest.service.ObjectByTimestampFinder;
 import testmongorest.service.TimeRecordObjectByBlock;
 import testmongorest.service.TimeRecordObjectByOne;
 
@@ -67,24 +68,28 @@ public class BaseRestController {
         return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
     }
 
+    @RequestMapping("/findDeviceById")
+    public String findDeviceById(@RequestParam(value="id", defaultValue="1") String id) {
+
+        long timeFindById = System.currentTimeMillis();
+        Device object;
+        object = deviceObjectRepository.findById(id);
+        timeFindById = System.currentTimeMillis() - timeFindById;
+        return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
+    }
+
     @RequestMapping("/findPositionByTS")
     public String findPositionByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
-        long timeFindByTS = System.currentTimeMillis();
+        return new ObjectByTimestampFinder<Position>(mongoTemplate).findObject(timeStamp, Position.class, "position");
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("timeStamp").is(timeStamp));
+    }
 
-        Position result = mongoTemplate.findOne(query, Position.class , "position");
+    @RequestMapping("/findDeviceByTS")
+    public String findDeviceByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
-        timeFindByTS = System.currentTimeMillis() - timeFindByTS;
+        return new ObjectByTimestampFinder<Device>(mongoTemplate).findObject(timeStamp, Device.class, "device");
 
-        if (result == null) {
-            return "findId # "+ " null " + ", time - " + (double)timeFindByTS/1000+" - " + " null" ;
-        }
-        else {
-            return "findId # " + result.getId() + ", time - " + (double) timeFindByTS / 1000 + " - " + result.getTimestamp();
-        }
     }
 
     @RequestMapping("/countShockByTS")
