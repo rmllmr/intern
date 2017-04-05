@@ -19,6 +19,7 @@ import testmongorest.dataconfig.AverTemp;
 import testmongorest.dataconfig.BaseObject;
 import testmongorest.dataconfig.Device;
 import testmongorest.dataconfig.Position;
+import testmongorest.service.ObjectByIdFinder;
 import testmongorest.service.ObjectByTimestampFinder;
 import testmongorest.service.TimeRecordObjectByBlock;
 import testmongorest.service.TimeRecordObjectByOne;
@@ -61,11 +62,7 @@ public class BaseRestController {
     @RequestMapping("/findPositionById")
     public String findPositionById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        long timeFindById = System.currentTimeMillis();
-        Position object;
-        object = positionObjectRepository.findById(id);
-        timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
+        return new ObjectByIdFinder<Position>(PositionObjectRepository).findObject(id);
     }
 
     @RequestMapping("/findDeviceById")
@@ -81,14 +78,14 @@ public class BaseRestController {
     @RequestMapping("/findPositionByTS")
     public String findPositionByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
-        return new ObjectByTimestampFinder<Position>(mongoTemplate).findObject(timeStamp, Position.class, "position");
+        return new ObjectByTimestampFinder(mongoTemplate).findObject(timeStamp, Position.class, "position");
 
     }
 
     @RequestMapping("/findDeviceByTS")
     public String findDeviceByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
-        return new ObjectByTimestampFinder<Device>(mongoTemplate).findObject(timeStamp, Device.class, "device");
+        return new ObjectByTimestampFinder(mongoTemplate).findObject(timeStamp, Device.class, "device");
 
     }
 
