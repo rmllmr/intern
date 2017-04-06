@@ -180,4 +180,12 @@ public class Device{
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id='" + id + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

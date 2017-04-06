@@ -19,14 +19,9 @@ public class BaseObject {
 
     @Override
     public String toString() {
-        return "{" +
+        return "BaseObject{" +
                 "id='" + id + '\'' +
                 ", timeStamp=" + timeStamp +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", shock=" + shock +
-                ", button=" + button +
-                ", temp=" + temp +
                 '}';
     }
 

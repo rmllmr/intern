@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,27 +53,19 @@ public class BaseRestController {
     @RequestMapping("/findById")
     public String findById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        long timeFindById = System.currentTimeMillis();
-        BaseObject object;
-        object = baseObjectRepository.findById(id);
-        timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
+        return new ObjectByIdFinder(baseObjectRepository).findObject(id);
     }
 
     @RequestMapping("/findPositionById")
     public String findPositionById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        return new ObjectByIdFinder<Position>(PositionObjectRepository).findObject(id);
+        return new ObjectByIdFinder(positionObjectRepository).findObject(id);
     }
 
     @RequestMapping("/findDeviceById")
     public String findDeviceById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        long timeFindById = System.currentTimeMillis();
-        Device object;
-        object = deviceObjectRepository.findById(id);
-        timeFindById = System.currentTimeMillis() - timeFindById;
-        return "findId # "+ id+ ", time - " + (double)timeFindById/1000+" - " +object.toString();
+        return new ObjectByIdFinder(deviceObjectRepository).findObject(id);
     }
 
     @RequestMapping("/findPositionByTS")
