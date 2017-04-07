@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,11 +52,17 @@ public class BaseRestController {
     @RequestMapping("/findById")
     public String findById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        return new ObjectByIdFinder(baseObjectRepository).findObject(id);
+        return new ObjectByIdFinder(baseObjectRepository).findObjectToString(id);
     }
 
     @RequestMapping("/findPositionById")
     public String findPositionById(@RequestParam(value="id", defaultValue="1") String id) {
+
+        return new ObjectByIdFinder(positionObjectRepository).findObjectToString(id);
+    }
+
+    @RequestMapping("/findPositionJSById")
+    public Object findPositionJSById(@RequestParam(value="id", defaultValue="100") String id) {
 
         return new ObjectByIdFinder(positionObjectRepository).findObject(id);
     }
@@ -65,21 +70,19 @@ public class BaseRestController {
     @RequestMapping("/findDeviceById")
     public String findDeviceById(@RequestParam(value="id", defaultValue="1") String id) {
 
-        return new ObjectByIdFinder(deviceObjectRepository).findObject(id);
+        return new ObjectByIdFinder(deviceObjectRepository).findObjectToString(id);
     }
 
     @RequestMapping("/findPositionByTS")
     public String findPositionByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
         return new ObjectByTimestampFinder(mongoTemplate).findObject(timeStamp, Position.class, "position");
-
     }
 
     @RequestMapping("/findDeviceByTS")
     public String findDeviceByTS(@RequestParam(value="timestamp", defaultValue="10") long timeStamp) {
 
         return new ObjectByTimestampFinder(mongoTemplate).findObject(timeStamp, Device.class, "device");
-
     }
 
     @RequestMapping("/countShockByTS")

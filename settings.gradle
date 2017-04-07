@@ -2,4 +2,5 @@ rootProject.name = 'intern'
 include 'lesson_morethreadsCach'
 include 'lesson_ProccesEventStack'
 include 'lesson_REST'
+include 'Spring_Cloud_Config'
 

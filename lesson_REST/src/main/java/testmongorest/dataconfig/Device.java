@@ -35,7 +35,7 @@ public class Device{
     private double battery;
     private int rssi;
     private Set<RangingTechnology> rangingCapabilities;
-    private long timestamp;
+    private long timeStamp;
 
     public long getAddress() {
         return address;
@@ -174,18 +174,18 @@ public class Device{
     }
 
     public long getTimestamp() {
-        return timestamp;
+        return timeStamp;
     }
 
     public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+        this.timeStamp = timestamp;
     }
 
     @Override
     public String toString() {
         return "Device{" +
                 "id='" + id + '\'' +
-                ", timestamp=" + timestamp +
+                ", timestamp=" + timeStamp +
                 '}';
     }
 }
