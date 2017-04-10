@@ -1,16 +1,17 @@
-package qrok.cloudconfig;
+package testconfigservice;
 
+/**
+ * Created by user on 10.04.2017.
+ */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.config.server.EnableConfigServer;
 
-/**
- * Created by user on 07.04.2017.
- */
-@SpringBootApplication
 @EnableConfigServer
-public class ConfigServer {
+@SpringBootApplication
+public class ConfigServiceApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(ConfigServer.class, args);
+        SpringApplication.run(ConfigServiceApplication.class, args);
     }
 }
